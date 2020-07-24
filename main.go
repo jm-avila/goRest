@@ -7,8 +7,9 @@ import (
 	"os"
 	"todo/handlers"
 	"todo/postgres"
+	"todo/domain"
 
-	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/v9"
 )
 
 func main() {
@@ -18,14 +19,20 @@ func main() {
 		Database: "todo_dev",
 	})
 
-	r := handlers.SetupRouter()
+	defer DB.Close()
+
+	domainDB := domain.DB{
+		UserRepo: postgres.NewUserRepo(DB),
+	}
+
+	d := &domain.Domain{DB: domainDB}
+
+	r := handlers.SetupRouter(d)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}
-
-	defer DB.Close()
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 

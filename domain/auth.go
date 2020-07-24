@@ -8,6 +8,7 @@ type RegisterPayload struct {
 	ConfirmPassword string `json:"confirm_password"`
 }
 
+// Register to the app
 func (d *Domain) Register(payload RegisterPayload) (*User, error) {
 	userExists, _ := d.DB.UserRepo.GetByEmail(payload.Email)
 	if userExists != nil {

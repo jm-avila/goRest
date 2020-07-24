@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"todo/domain"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -9,6 +10,7 @@ import (
 
 // Server struct
 type Server struct {
+	domain *domain.Domain
 }
 
 func setupMiddlewares(r *chi.Mux) {
@@ -22,13 +24,13 @@ func setupMiddlewares(r *chi.Mux) {
 }
 
 // NewServer Server type
-func NewServer() *Server {
-	return &Server{}
+func NewServer(domain *domain.Domain) *Server {
+	return &Server{domain: domain}
 }
 
 // SetupRouter chi
-func SetupRouter() *chi.Mux {
-	server := NewServer()
+func SetupRouter(domain *domain.Domain) *chi.Mux {
+	server := NewServer(domain)
 
 	r := chi.NewRouter()
 
